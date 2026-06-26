@@ -1,46 +1,36 @@
 import { useState } from "react";
 import axios from "axios";
 
-export default function Login() {
+export default function Register() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const login = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
-        "http://127.0.0.1:8000/auth/login",
+      await axios.post(
+        "http://127.0.0.1:8000/auth/register",
         {
+          name,
           email,
           password,
         }
       );
 
-      localStorage.setItem(
-        "token",
-        res.data.access_token
-      );
+      alert("Registration Successful");
 
-      localStorage.setItem(
-        "name",
-        res.data.name
-      );
+      setName("");
+      setEmail("");
+      setPassword("");
 
-      localStorage.setItem(
-        "role",
-        res.data.role
-      );
-
-      alert("Login Successful");
-
-      window.location.reload();
     } catch (err) {
       console.error(err);
 
       alert(
         err.response?.data?.detail ||
-          "Login Failed"
+        "Registration Failed"
       );
     }
   };
@@ -50,16 +40,31 @@ export default function Login() {
 
       <div
         className="card shadow-lg mx-auto p-4"
-        style={{ maxWidth: "450px" }}
+        style={{ maxWidth: "500px" }}
       >
         <div className="text-center mb-4">
-          <h2> Login</h2>
+          <h2>Register</h2>
           <p className="text-muted">
-            Sign in to continue
+            Create your AI Notes account
           </p>
         </div>
 
-        <form onSubmit={login}>
+        <form onSubmit={handleRegister}>
+
+          <div className="mb-3">
+            <label className="form-label">
+              Full Name
+            </label>
+
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
 
           <div className="mb-3">
             <label className="form-label">
@@ -69,16 +74,14 @@ export default function Login() {
             <input
               type="email"
               className="form-control"
-              placeholder="Enter Email"
+              placeholder="Enter your email"
               value={email}
-              onChange={(e) =>
-                setEmail(e.target.value)
-              }
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
 
-          <div className="mb-3">
+          <div className="mb-4">
             <label className="form-label">
               Password
             </label>
@@ -86,20 +89,18 @@ export default function Login() {
             <input
               type="password"
               className="form-control"
-              placeholder="Enter Password"
+              placeholder="Create a password"
               value={password}
-              onChange={(e) =>
-                setPassword(e.target.value)
-              }
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
 
           <button
-            className="btn btn-primary w-100"
             type="submit"
+            className="btn btn-success w-100"
           >
-            Login
+            Register
           </button>
 
         </form>
